@@ -2,7 +2,7 @@ import type { BinaryHexViewRow } from "@/lib/dataGrid/binaryHexViewer";
 import { buildBinaryHexViewRows } from "@/lib/dataGrid/binaryHexViewer";
 import { decodeJsonUnicodeEscapes, formatJsonSource, isLosslessJsonNumber, parseJsonPreservingLargeNumbers } from "@/lib/common/safeJsonFormat";
 import type { RedisBlob, RedisCollectionPage, RedisHashItem, RedisListItem, RedisSetItem, RedisValue, RedisZsetItem } from "@/lib/backend/api";
-import { decodeMsgpack, decodePhpSerialized, decodePickle, parseJavaSerializedDetail, type RedisJavaSerializedDetail, type RedisMsgpackDetail, type RedisPhpSerializedDetail, type RedisPickleDetail } from "@/lib/redis/codec";
+import { decodeMsgpack, decodePhpSerialized, decodePickle, isPickleMagic, parseJavaSerializedDetail, type RedisJavaSerializedDetail, type RedisMsgpackDetail, type RedisPhpSerializedDetail, type RedisPickleDetail } from "@/lib/redis/codec";
 
 export type RedisValueView = "utf8" | "ascii" | "binary" | "json" | "unicodejson" | "yaml" | "xml" | "hex" | "base64";
 export type RedisValueCodec = "none" | "gzip" | "zlib" | "deflate" | "base64" | "msgpack" | "pickle" | "phpserialize" | "protobuf" | "javaserialize";
@@ -334,6 +334,7 @@ function xmlEscape(value: string): string {
 
 function xmlTag(name: string): string {
   const tag = name.replace(/[^\w.-]/g, "_");
+  if (!tag) return "item";
   return /^-|\./.test(tag) || /^\d/.test(tag) ? `_${tag}` : tag;
 }
 
@@ -634,7 +635,7 @@ type DetectedCodecs = {
 
 function detectStructuredCodecs(bytes: Uint8Array): DetectedCodecs {
   const javaSerialized = parseJavaSerializedDetail(bytes) ?? undefined;
-  const pickle = javaSerialized ? undefined : (decodePickle(bytes) ?? undefined);
+  const pickle = javaSerialized || !isPickleMagic(bytes) ? undefined : (decodePickle(bytes) ?? undefined);
   const msgpack = javaSerialized || pickle ? undefined : (decodeMsgpack(bytes) ?? undefined);
   // Protobuf is deliberately absent: without a schema the wire format matches
   // too many arbitrary byte strings, so it only decodes on explicit selection.

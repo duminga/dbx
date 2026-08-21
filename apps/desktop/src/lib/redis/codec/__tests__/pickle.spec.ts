@@ -39,6 +39,19 @@ describe("decodePickle", () => {
     });
   });
 
+  it.each([
+    [0, "KGRwMApWc3RhdHVzCnAxClZTVUNDRVNTCnAyCnNWcmVzdWx0CnAzCihscDQKSTEKYVZoZWxsbwpwNQphTmFJMDEKYUkwMAphcy4="],
+    [1, "fXEAKFgGAAAAc3RhdHVzcQFYBwAAAFNVQ0NFU1NxAlgGAAAAcmVzdWx0cQNdcQQoSwFYBQAAAGhlbGxvcQVOSTAxCkkwMApldS4="],
+  ])("explicitly decodes protocol %i without relaxing magic detection", (_protocol, fixture) => {
+    const bytes = blob(fixture);
+
+    expect(isPickleMagic(bytes)).toBe(false);
+    expect(decodePickle(bytes)?.value).toEqual({
+      status: "SUCCESS",
+      result: [1, "hello", null, true, false],
+    });
+  });
+
   it("decodes nested tuples, lists, and dicts", () => {
     expect(decodePickle(blob("gASVIwAAAAAAAAB9lCiMBGFyZ3OUSwFLAoaUjAZrd2FyZ3OUfZSMAXiUiHN1Lg=="))?.value).toEqual({
       args: [1, 2],

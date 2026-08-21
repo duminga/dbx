@@ -57,7 +57,7 @@ import {
   type RedisValueCodec,
   type RedisValueFormat,
 } from "@/lib/redis/redisValuePresentation";
-import { decompressRedisValue, decodeBase64RedisValue, decodeProtobuf, isGzipMagic, type RedisDecompressAlgorithm } from "@/lib/redis/codec";
+import { decompressRedisValue, decodeBase64RedisValue, decodePickle, decodeProtobuf, isGzipMagic, type RedisDecompressAlgorithm } from "@/lib/redis/codec";
 import { canFullHighlightRedisText, findRedisTextMatches, nextRedisSearchMatchIndex, REDIS_VALUE_SEARCH_MATCH_LIMIT, renderRedisTextSearchHtml, redisValueSearchStatus } from "@/lib/redis/redisValueSearch";
 import TextContentSearchBar from "@/components/common/TextContentSearchBar.vue";
 import { decodeJsonUnicodeEscapes, formatJsonSource, mapDisplayToRaw } from "@/lib/common/safeJsonFormat";
@@ -463,7 +463,7 @@ const activeStructuredStringDetail = computed<RedisDecodedDetail | null>(() => {
   const detail = stringValueDetail.value;
   const codec = stringValueCodec.value;
   if (!detail || !isStructuredCodec(codec)) return null;
-  if (codec === "pickle" && detail.pickle) return detail.pickle;
+  if (codec === "pickle" && stringBlob.value) return detail.pickle ?? decodePickle(decodeRedisBlob(stringBlob.value));
   if (codec === "msgpack" && detail.msgpack) return detail.msgpack;
   if (codec === "phpserialize" && detail.phpSerialized) return detail.phpSerialized;
   if (codec === "javaserialize" && detail.javaSerialized) return detail.javaSerialized;
@@ -477,7 +477,7 @@ const activeStructuredMemberDetail = computed<RedisDecodedDetail | null>(() => {
   const detail = selectedMemberDetail.value;
   const codec = memberValueCodec.value;
   if (!isStructuredCodec(codec)) return null;
-  if (codec === "pickle" && detail.pickle) return detail.pickle;
+  if (codec === "pickle" && isRedisBlob(selectedMemberRaw.value)) return detail.pickle ?? decodePickle(decodeRedisBlob(selectedMemberRaw.value));
   if (codec === "msgpack" && detail.msgpack) return detail.msgpack;
   if (codec === "phpserialize" && detail.phpSerialized) return detail.phpSerialized;
   if (codec === "javaserialize" && detail.javaSerialized) return detail.javaSerialized;

@@ -259,6 +259,16 @@ describe("redisValuePresentation", () => {
     expect(canRenderRedisValueFormat(formatRedisMemberDetail("plain-text"), "utf8")).toBe(true);
   });
 
+  it("keeps legacy Pickle payloads out of conservative auto-detection", () => {
+    const detail = formatRedisMemberDetail({
+      raw_base64: "KGRwMApWc3RhdHVzCnAxClZTVUNDRVNTCnAyCnNWcmVzdWx0CnAzCihscDQKSTEKYVZoZWxsbwpwNQphTmFJMDEKYUkwMAphcy4=",
+      encoding: "binary",
+    });
+
+    expect(detail.pickle).toBeUndefined();
+    expect(detail.defaultCodec).toBe("none");
+  });
+
   it("keeps self-referential Java maps representable via refs", () => {
     const detail = formatRedisMemberDetail({
       raw_base64: "rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAABdAAEc2VsZnEAfgABeA==",
@@ -313,5 +323,9 @@ describe("redisValuePresentation", () => {
 
   it("escapes XML text and sanitizes unsafe tag names", () => {
     expect(jsonToXmlText({ query: 'a < "b" & c', "1st": "entry" })).toBe('<?xml version="1.0" encoding="UTF-8"?>\n<root>\n  <query>a &lt; &quot;b&quot; &amp; c</query>\n  <_1st>entry</_1st>\n</root>');
+  });
+
+  it("uses a valid fallback tag for empty JSON keys", () => {
+    expect(jsonToXmlText({ "": 1 })).toBe('<?xml version="1.0" encoding="UTF-8"?>\n<root>\n  <item>1</item>\n</root>');
   });
 });

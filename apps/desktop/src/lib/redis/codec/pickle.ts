@@ -639,7 +639,6 @@ export function isPickleMagic(bytes: Uint8Array): boolean {
 }
 
 export function decodePickle(bytes: Uint8Array): RedisPickleDetail | null {
-  if (!isPickleMagic(bytes)) return null;
   try {
     const value = toJsonable(new PickleUnpickler(bytes).load());
     return {
