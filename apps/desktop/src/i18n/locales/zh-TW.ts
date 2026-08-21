@@ -3706,6 +3706,8 @@ export default withEnglishFallback({
     rawContent: "原始內容",
     wordWrap: "自動換行",
     codecNone: "無",
+    codecRowLabel: "解碼",
+    viewRowLabel: "檢視",
     codecBase64: "Base64 解碼",
     codecMismatch: "無法按所選解碼方式還原，已顯示原始內容",
     unicodeJsonView: "Unicode JSON",

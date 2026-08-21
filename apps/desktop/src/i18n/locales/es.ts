@@ -4377,6 +4377,8 @@ export default withEnglishFallback({
     rawContent: "Contenido original",
     wordWrap: "Ajuste de línea",
     codecNone: "Ninguno",
+    codecRowLabel: "Descodificar",
+    viewRowLabel: "Vista",
     codecBase64: "Descodificación Base64",
     codecMismatch: "No se pudo decodificar con el códec seleccionado; se muestra el contenido original",
     unicodeJsonView: "JSON Unicode",

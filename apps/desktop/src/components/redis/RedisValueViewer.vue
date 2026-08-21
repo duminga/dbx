@@ -2740,6 +2740,7 @@ defineExpose({ focusSearch });
       <!-- String -->
       <div v-if="isStringLikeKind && stringValueDetail" class="flex-1 flex flex-col overflow-hidden">
         <div class="flex h-9 items-center gap-2 border-b px-4 text-xs shrink-0">
+          <span class="shrink-0 text-muted-foreground">{{ t("redis.codecRowLabel") }}</span>
           <div class="flex max-w-full overflow-x-auto rounded-md border bg-muted/20 p-0.5">
             <Button v-for="codec in REDIS_VALUE_CODEC_ORDER" :key="codec" variant="ghost" size="sm" class="h-6 shrink-0 rounded-[5px] px-2 text-xs" :class="{ 'bg-background shadow-sm': stringValueCodec === codec }" @click="setStringValueCodec(codec)">
               {{ redisCodecLabel(codec) }}
@@ -2754,6 +2755,7 @@ defineExpose({ focusSearch });
           </label>
         </div>
         <div class="flex h-9 items-center gap-2 border-b px-4 text-xs shrink-0">
+          <span class="shrink-0 text-muted-foreground">{{ t("redis.viewRowLabel") }}</span>
           <div class="flex max-w-full overflow-x-auto rounded-md border bg-muted/20 p-0.5">
             <Button
               v-for="format in REDIS_VALUE_FORMAT_DISPLAY_ORDER"
@@ -3491,6 +3493,7 @@ defineExpose({ focusSearch });
         </template>
         <template v-else>
           <div class="flex h-9 items-center gap-2 border-b px-5 text-xs">
+            <span class="shrink-0 text-muted-foreground">{{ t("redis.codecRowLabel") }}</span>
             <div class="flex max-w-full overflow-x-auto rounded-md border bg-muted/20 p-0.5">
               <Button v-for="codec in REDIS_VALUE_CODEC_ORDER" :key="codec" variant="ghost" size="sm" class="h-6 shrink-0 rounded-[5px] px-2 text-xs" :class="{ 'bg-background shadow-sm': memberValueCodec === codec }" @click="setMemberValueCodec(codec)">
                 {{ redisCodecLabel(codec) }}
@@ -3504,6 +3507,7 @@ defineExpose({ focusSearch });
             </label>
           </div>
           <div class="flex h-9 items-center gap-2 border-b px-5 text-xs">
+            <span class="shrink-0 text-muted-foreground">{{ t("redis.viewRowLabel") }}</span>
             <div class="flex max-w-full overflow-x-auto rounded-md border bg-muted/20 p-0.5">
               <Button
                 v-for="format in REDIS_VALUE_FORMAT_DISPLAY_ORDER"

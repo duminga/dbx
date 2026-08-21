@@ -4556,6 +4556,8 @@ export default {
     rawContent: "Raw content",
     wordWrap: "Word wrap",
     codecNone: "None",
+    codecRowLabel: "Decode",
+    viewRowLabel: "View",
     codecBase64: "Base64 Decode",
     unicodeJsonView: "Unicode JSON",
     codecMismatch: "Unable to decode with the selected codec; showing the original content",
